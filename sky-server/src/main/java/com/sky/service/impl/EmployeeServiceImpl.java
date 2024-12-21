@@ -1,5 +1,4 @@
 package com.sky.service.impl;
-
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
@@ -23,13 +22,10 @@ import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-
     @Autowired
     private EmployeeMapper employeeMapper;
-
     /**
      * 员工登录
      *
@@ -39,10 +35,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee login(EmployeeLoginDTO employeeLoginDTO) {
         String username = employeeLoginDTO.getUsername();
         String password = employeeLoginDTO.getPassword();
-
         //1、根据用户名查询数据库中的数据
         Employee employee = employeeMapper.getByUsername(username);
-
         //2、处理各种异常情况（用户名不存在、密码不对、账号被锁定）
         if (employee == null) {
             //账号不存在
@@ -55,12 +49,10 @@ public class EmployeeServiceImpl implements EmployeeService {
             //密码错误
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
         }
-
         if (employee.getStatus() == StatusConstant.DISABLE) {
             //账号被锁定
             throw new AccountLockedException(MessageConstant.ACCOUNT_LOCKED);
         }
-
         //3、返回实体对象
         return employee;
     }
@@ -74,17 +66,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         //设置密码,默认密码
         e.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
         //创建时间
-        e.setCreateTime(LocalDateTime.now());
+//        e.setCreateTime(LocalDateTime.now());
         //修改时间
-        e.setUpdateTime(LocalDateTime.now());
+//        e.setUpdateTime(LocalDateTime.now());
         //创建人id和修改人id
         // TODO 后期需要动态维护
-        e.setCreateUser(BaseContext.getCurrentId());
-        e.setUpdateUser(BaseContext.getCurrentId());
+//        e.setCreateUser(BaseContext.getCurrentId());
+//        e.setUpdateUser(BaseContext.getCurrentId());
         employeeMapper.insert(e);
     }
     //PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
-
     @Override
     public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
         //开始分页查询
@@ -94,7 +85,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<Employee> records = page.getResult();
         return new PageResult(total,records);
     }
-
     /*
         启用禁用员工账号
      */
@@ -118,8 +108,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void update(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO,employee);
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(BaseContext.getCurrentId());
         employeeMapper.update(employee);
     }
 }
