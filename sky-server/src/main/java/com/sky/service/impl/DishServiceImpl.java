@@ -1,7 +1,6 @@
 package com.sky.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.sky.annotation.AutoFill;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.dto.DishDTO;
@@ -49,7 +48,6 @@ public class DishServiceImpl implements DishService {
             dishFlavorMapper.insertBatch(flavors);
         }
     }
-
     @Override
     public PageResult pageQuery(DishPageQueryDTO dishPageQueryDTO) {
         PageHelper.startPage(dishPageQueryDTO.getPage(),dishPageQueryDTO.getPageSize());
@@ -89,7 +87,6 @@ public class DishServiceImpl implements DishService {
         //批量删除关联的口味数据
         dishFlavorMapper.deleByDishIds(ids);
     }
-
     @Override
     public DishVO getByIdWithFlavor(Long id) {
         //根据id查询菜品数据
@@ -102,7 +99,6 @@ public class DishServiceImpl implements DishService {
         dishVO.setFlavors(dishFlavors);
         return dishVO;
     }
-
     @Override
     public void updateWithFlavor(DishDTO dishDTO) {
         //修改菜品表基本信息
@@ -119,6 +115,5 @@ public class DishServiceImpl implements DishService {
             });
             dishFlavorMapper.insertBatch(flavors);
         }
-
     }
 }
