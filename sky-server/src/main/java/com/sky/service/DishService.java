@@ -22,4 +22,6 @@ public interface DishService
 
     void updateWithFlavor(DishDTO dishDTO);
     List<DishVO> listWithFlavor(Dish dish);
+
+    void startOrstop(Integer status, Long id);
 }

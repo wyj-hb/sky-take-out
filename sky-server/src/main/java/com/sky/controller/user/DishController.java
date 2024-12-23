@@ -49,5 +49,4 @@ public class DishController {
         redisTemplate.opsForValue().set(key,list);
         return Result.success(list);
     }
-
 }
