@@ -16,3 +16,6 @@ sky:
     port: 6379
     password: 123456
     database: 0
+  wexin:
+    appid: wxd88e123792fa067b
+    secret: bade8560cc75d40675669cc97ddd112c
