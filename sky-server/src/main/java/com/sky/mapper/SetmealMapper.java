@@ -40,4 +40,7 @@ public interface SetmealMapper {
     List<Dish> getDishByid(Long id);
 
     Page<SetmealVO> pageQuery(SetmealPageQueryDTO setmealPageQueryDTO);
+
+
+    void delete(List<Long> ids);
 }

@@ -26,4 +26,6 @@ public interface SetmealService {
     void save(SetmealDTO setmealDTO);
     //分页套餐查询
     PageResult PageQuery(SetmealPageQueryDTO setmealPageQueryDTO);
+
+    void DeleteByids(List<Long> ids);
 }
