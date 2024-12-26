@@ -43,4 +43,6 @@ public interface SetmealMapper {
 
 
     void delete(List<Long> ids);
+    @Select("select * from setmeal where id = #{id}")
+    Dish getSetmealByid(Long id);
 }

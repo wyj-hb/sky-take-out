@@ -2,16 +2,11 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.sky.constant.MessageConstant;
-import com.sky.constant.StatusConstant;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
-import com.sky.exception.DeletionNotAllowedException;
-import com.sky.exception.SetmealEnableFailedException;
-import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
@@ -24,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 套餐业务实现
@@ -77,5 +73,32 @@ public class SetmealServiceImpl implements SetmealService {
     @Override
     public void DeleteByids(List<Long> ids) {
         setmealMapper.delete(ids);
+    }
+
+    @Override
+    public SetmealVO SearchByid(Long id) {
+        Dish dish = setmealMapper.getSetmealByid(id);
+        SetmealVO setmealVO = new SetmealVO();
+        BeanUtils.copyProperties(dish,setmealVO);
+        List<SetmealDish> setmeals = setmealDishMapper.getSetmealByid(id);
+        setmealVO.setSetmealDishes(setmeals);
+        return setmealVO;
+    }
+    @Transactional
+    @Override
+    public void SaveSetmeal(SetmealDTO setmealDTO) {
+        //setmeal表
+        Setmeal setmeal = new Setmeal();
+        BeanUtils.copyProperties(setmealDTO, setmeal);
+        setmealMapper.update(setmeal);
+        //修改setmealDishes
+        //先删除
+        setmealDishMapper.deleByids(setmealDTO.getId());
+        List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes();
+        setmealDishes.forEach(setmealDish -> {
+            setmealDish.setSetmealId(setmealDTO.getId());
+        });
+        //再插入
+        setmealDishMapper.insert(setmealDishes);
     }
 }
