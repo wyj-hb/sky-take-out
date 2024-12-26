@@ -24,4 +24,6 @@ public interface SetmealService {
     List<DishItemVO> getDishItemById(Long id);
     //保存新套餐
     void save(SetmealDTO setmealDTO);
+    //分页套餐查询
+    PageResult PageQuery(SetmealPageQueryDTO setmealPageQueryDTO);
 }

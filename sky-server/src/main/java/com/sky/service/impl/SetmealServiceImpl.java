@@ -65,4 +65,12 @@ public class SetmealServiceImpl implements SetmealService {
         });
         setmealDishMapper.insert(setmealDishes);
     }
+
+    @Override
+    public PageResult PageQuery(SetmealPageQueryDTO setmealPageQueryDTO) {
+        //开启分页查询
+        PageHelper.startPage(setmealPageQueryDTO.getPage(),setmealPageQueryDTO.getPageSize());
+        Page<SetmealVO> page = setmealMapper.pageQuery(setmealPageQueryDTO);
+        return new PageResult(page.getTotal(),page.getResult());
+    }
 }
