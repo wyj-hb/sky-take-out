@@ -101,4 +101,11 @@ public class SetmealServiceImpl implements SetmealService {
         //再插入
         setmealDishMapper.insert(setmealDishes);
     }
+
+    @Override
+    public void StartOrStop(Integer status,Long id) {
+        //根据id查询
+        Setmeal setmeal = Setmeal.builder().id(id).status(status).build();
+        setmealMapper.update(setmeal);
+    }
 }

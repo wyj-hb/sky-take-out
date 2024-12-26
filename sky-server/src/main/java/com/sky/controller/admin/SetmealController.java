@@ -63,5 +63,11 @@ public class SetmealController{
         setmealService.SaveSetmeal(setmealDTO);
         return Result.success();
     }
-
+    @PostMapping("/status/{status}")
+    @ApiOperation("起售停售套餐")
+    public Result StartOrStop(@PathVariable("status") Integer status,Long id)
+    {
+        setmealService.StartOrStop(status,id);
+        return Result.success();
+    }
 }

@@ -32,4 +32,6 @@ public interface SetmealService {
     SetmealVO SearchByid(Long id);
 
     void SaveSetmeal(SetmealDTO setmealDTO);
+
+    void StartOrStop(Integer status,Long id);
 }
