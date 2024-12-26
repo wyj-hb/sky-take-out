@@ -131,7 +131,6 @@ public class DishServiceImpl implements DishService {
         List<Dish> dishList = dishMapper.list(dish);
 
         List<DishVO> dishVOList = new ArrayList<>();
-
         for (Dish d : dishList) {
             DishVO dishVO = new DishVO();
             BeanUtils.copyProperties(d,dishVO);
@@ -142,7 +141,6 @@ public class DishServiceImpl implements DishService {
             dishVO.setFlavors(flavors);
             dishVOList.add(dishVO);
         }
-
         return dishVOList;
     }
     public void startOrstop(Integer status, Long id)

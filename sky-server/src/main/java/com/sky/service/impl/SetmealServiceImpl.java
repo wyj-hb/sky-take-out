@@ -4,9 +4,11 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
+import com.sky.entity.Category;
 import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
+import com.sky.mapper.CategoryMapper;
 import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
@@ -32,7 +34,6 @@ public class SetmealServiceImpl implements SetmealService {
     private SetmealMapper setmealMapper;
     @Autowired
     private SetmealDishMapper setmealDishMapper;
-
     /**
      * 条件查询
      * @param setmeal
@@ -50,6 +51,7 @@ public class SetmealServiceImpl implements SetmealService {
     @Override
     @Transactional
     public void save(SetmealDTO setmealDTO) {
+        //插入到dish中
         //插入到setmeal中
         Setmeal setmeal = new Setmeal();
         BeanUtils.copyProperties(setmealDTO, setmeal);

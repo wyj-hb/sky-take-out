@@ -17,7 +17,6 @@ import java.util.Set;
 
 @Mapper
 public interface SetmealMapper {
-
     /**
      * 根据分类id查询套餐的数量
      * @param id
@@ -25,9 +24,7 @@ public interface SetmealMapper {
      */
     @Select("select count(id) from setmeal where category_id = #{categoryId}")
     Integer countByCategoryId(Long id);
-
     List<Setmeal> list(Setmeal setmeal);
-
     @Select("select sd.name, sd.copies, d.image, d.description " +
             "from setmeal_dish sd left join dish d on sd.dish_id = d.id " +
             "where sd.setmeal_id = #{setmealId}")
@@ -38,10 +35,7 @@ public interface SetmealMapper {
     void update(Setmeal setmeal);
     @Select("select * from dish where category_id = #{id}")
     List<Dish> getDishByid(Long id);
-
     Page<SetmealVO> pageQuery(SetmealPageQueryDTO setmealPageQueryDTO);
-
-
     void delete(List<Long> ids);
     @Select("select * from setmeal where id = #{id}")
     Dish getSetmealByid(Long id);
