@@ -2,12 +2,16 @@ package com.sky.service;
 
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
+import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
 import com.sky.result.PageResult;
 import com.sky.vo.DishItemVO;
 import com.sky.vo.SetmealVO;
-import java.util.List;
+import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+@Service
 public interface SetmealService {
 
     /**
@@ -18,6 +22,6 @@ public interface SetmealService {
     List<Setmeal> list(Setmeal setmeal);
 
     List<DishItemVO> getDishItemById(Long id);
-
-
+    //保存新套餐
+    void save(SetmealDTO setmealDTO);
 }

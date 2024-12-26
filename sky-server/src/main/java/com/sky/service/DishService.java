@@ -24,4 +24,6 @@ public interface DishService
     List<DishVO> listWithFlavor(Dish dish);
 
     void startOrstop(Integer status, Long id);
+    //根据套餐id获取菜品
+    List<Dish> getDishItemByDishId(Long id);
 }

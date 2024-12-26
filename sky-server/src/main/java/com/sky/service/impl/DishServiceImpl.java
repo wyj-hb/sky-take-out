@@ -168,4 +168,9 @@ public class DishServiceImpl implements DishService {
             }
         }
     }
+
+    @Override
+    public List<Dish> getDishItemByDishId(Long id) {
+        return setmealMapper.getDishByid(id);
+    }
 }

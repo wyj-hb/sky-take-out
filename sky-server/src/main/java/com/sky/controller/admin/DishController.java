@@ -25,7 +25,6 @@ import java.util.Set;
 @Api(tags = "菜品相关接口")
 @Slf4j
 public class DishController {
-
     @Autowired
     private DishService dishService;
     @Autowired
@@ -40,7 +39,6 @@ public class DishController {
         clean_Cathe(key);
         return Result.success();
     }
-
     @GetMapping("/page")
     @ApiOperation("菜品分页查询")
     public Result<PageResult> page(DishPageQueryDTO dishPageQueryDTO)
@@ -77,6 +75,14 @@ public class DishController {
         clean_Cathe("dish_*");
         return Result.success();
     }
+    @GetMapping("/list")
+    @ApiOperation("根据分类id查询对应的菜品")
+    public Result<List<Dish>> SearchById(Long categoryId)
+    {
+        log.info("根据菜品分类id查询对应的菜品:{}",categoryId);
+        List<Dish> dishItemByDishId = dishService.getDishItemByDishId(categoryId);
+        return Result.success(dishItemByDishId);
+    }
     @PostMapping("/status/{status}")
     @ApiOperation("菜品起售停售")
     public Result<String> startOrstop(@PathVariable Integer status,Long id)
@@ -85,6 +91,7 @@ public class DishController {
         clean_Cathe("dish_*");
         return Result.success();
     }
+
     private void clean_Cathe(String pattern)
     {
         Set keys = redisTemplate.keys(pattern);
