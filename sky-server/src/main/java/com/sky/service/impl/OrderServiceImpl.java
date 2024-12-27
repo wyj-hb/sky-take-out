@@ -174,4 +174,15 @@ class OrderServiceImpl implements OrderService {
         pageResult.setTotal(orderDetails.getTotal());
         return pageResult;
     }
+
+    @Override
+    public void insert(Long id) {
+        Orders o = new Orders();
+        //获取当前用户id
+        Long currentId = BaseContext.getCurrentId();
+        // 根据订单id查询当前订单详情
+        List<OrderDetail> orderDetailList = orderDetailMapper.getById(id);
+        // 将订单详情转为购物车对象
+        ShoppingCart shoppingCart = new ShoppingCart();
+    }
 }

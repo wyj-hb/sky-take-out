@@ -22,4 +22,6 @@ public interface OrderService {
      */
     void paySuccess(String outTradeNo);
     PageResult PageQuery(OrdersPageQueryDTO ordersPageQueryDTO);
+
+    void insert(Long id);
 }
