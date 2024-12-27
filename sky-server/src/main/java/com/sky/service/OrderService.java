@@ -27,4 +27,6 @@ public interface OrderService {
     void insert(Long id);
 
     OrderVO getOrderDetail(Long id);
+
+    void cancelByid(Long id);
 }
