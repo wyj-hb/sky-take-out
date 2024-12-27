@@ -21,6 +21,7 @@ import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import org.apache.poi.ss.formula.functions.BaseNumberUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 class OrderServiceImpl implements OrderService {
@@ -183,6 +185,15 @@ class OrderServiceImpl implements OrderService {
         // 根据订单id查询当前订单详情
         List<OrderDetail> orderDetailList = orderDetailMapper.getById(id);
         // 将订单详情转为购物车对象
-        ShoppingCart shoppingCart = new ShoppingCart();
+        List<ShoppingCart> shoppingCarts = orderDetailList.stream().map(
+                orderDetail -> {
+                    ShoppingCart shoppingCart = new ShoppingCart();
+                    BeanUtils.copyProperties(orderDetail,shoppingCart);
+                    shoppingCart.setUserId(currentId);
+                    shoppingCart.setCreateTime(LocalDateTime.now());
+                    return shoppingCart;
+                }
+        ).collect(Collectors.toList());
+        shoppingCartMapper.insertBatch(shoppingCarts);
     }
 }
