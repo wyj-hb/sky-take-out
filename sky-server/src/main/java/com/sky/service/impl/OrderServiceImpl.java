@@ -330,7 +330,6 @@ class OrderServiceImpl implements OrderService {
         orders.setCancelTime(LocalDateTime.now());
         orderMapper.update(orders);
     }
-
     @Override
     public void rejection(OrdersRejectionDTO ordersRejectionDTO) {
         //查询出订单,如果不是待接单则不可以拒单
@@ -350,7 +349,6 @@ class OrderServiceImpl implements OrderService {
             orderMapper.update(orders);
         }
     }
-
     @Override
     public void complete(Long id) {
         // 根据id查询订单
