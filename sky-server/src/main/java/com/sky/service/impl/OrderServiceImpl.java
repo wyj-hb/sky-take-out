@@ -18,6 +18,7 @@ import com.sky.result.Result;
 import com.sky.service.OrderService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
+import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
 import io.swagger.annotations.ApiOperation;
@@ -268,8 +269,26 @@ class OrderServiceImpl implements OrderService {
             String orderDish = x.getName() + "*" + x.getNumber() + ";";
             return orderDish;
         }).collect(Collectors.toList());
-
         // 将该订单对应的所有菜品信息拼接在一起
         return String.join("", orderDishList);
+    }
+
+    @Override
+    public OrderStatisticsVO statics() {
+        OrderStatisticsVO orderStatisticsVO = new OrderStatisticsVO();
+        OrdersPageQueryDTO ordersPageQueryDTO = new OrdersPageQueryDTO();
+
+        //3 待接单 2 待派送 4派送中
+        orderStatisticsVO.setToBeConfirmed(getStatusNum(3));
+        orderStatisticsVO.setConfirmed(getStatusNum(2));
+        orderStatisticsVO.setDeliveryInProgress(getStatusNum(4));
+        return orderStatisticsVO;
+    }
+    public int getStatusNum(int status)
+    {
+        OrdersPageQueryDTO ordersPageQueryDTO = new OrdersPageQueryDTO();
+        ordersPageQueryDTO.setStatus(status);
+        Page<Orders> orders = orderMapper.pageQuery(ordersPageQueryDTO);
+        return orders.size();
     }
 }
