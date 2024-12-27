@@ -2,6 +2,7 @@ package com.sky.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.OrdersPageQueryDTO;
@@ -77,7 +78,7 @@ class OrderServiceImpl implements OrderService {
         //待付款状态
         orders.setStatus(Orders.PENDING_PAYMENT);
         orders.setNumber(String.valueOf(System.currentTimeMillis()));
-        orders.setAddress(address.getPhone());
+        orders.setPhone(address.getPhone());
         orders.setConsignee(address.getConsignee());
         orders.setUserId(currentId);
         orderMapper.insert(orders);
@@ -227,5 +228,48 @@ class OrderServiceImpl implements OrderService {
         orders.setCancelReason("用户取消");
         orders.setCancelTime(LocalDateTime.now());
         orderMapper.update(orders);
+    }
+
+    @Override
+    public PageResult conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO) {
+        //开启分页查询
+        PageHelper.startPage(ordersPageQueryDTO.getPage(), ordersPageQueryDTO.getPageSize());
+        //查询所有符合条件的订单
+        Page<Orders> orders = orderMapper.pageQuery(ordersPageQueryDTO);
+        List<OrderVO> orderVOList = getOrderVOList(orders);
+        return new PageResult(orders.getTotal(),orderVOList);
+    }
+    public List<OrderVO> getOrderVOList(Page<Orders> page)
+    {
+        List<OrderVO> list = new ArrayList<>();
+        //遍历每一个订单,并将所有的菜品信息获取出来
+        List<Orders> result = page.getResult();
+        if (!CollectionUtils.isEmpty(result)) {
+            for(Orders o : result)
+            {
+                OrderVO orderVO = new OrderVO();
+                BeanUtils.copyProperties(o,orderVO);
+                String str = GetDishByid(o.getId());
+                orderVO.setOrderDishes(str);
+                List<OrderDetail> orderDetails = orderDetailMapper.getById(o.getId());
+                orderVO.setOrderDetailList(orderDetails);
+                list.add(orderVO);
+            }
+        }
+        return list;
+    }
+    public String GetDishByid(Long id)
+    {
+        // 查询订单菜品详情信息（订单中的菜品和数量）
+        List<OrderDetail> orderDetailList = orderDetailMapper.getById(id);
+
+        // 将每一条订单菜品信息拼接为字符串（格式：宫保鸡丁*3；）
+        List<String> orderDishList = orderDetailList.stream().map(x -> {
+            String orderDish = x.getName() + "*" + x.getNumber() + ";";
+            return orderDish;
+        }).collect(Collectors.toList());
+
+        // 将该订单对应的所有菜品信息拼接在一起
+        return String.join("", orderDishList);
     }
 }
