@@ -10,4 +10,7 @@
             (#{df.name},#{df.image},#{df.orderId},#{df.dishId},#{df.setmealId},#{df.dishFlavor},#{df.number},#{df.amount})
         </foreach>
     </insert>
+    <select id="getById" resultType="com.sky.entity.OrderDetail">
+        select * from order_detail where id = #{id}
+    </select>
 </mapper>

@@ -1,8 +1,11 @@
 package com.sky.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
+import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.entity.*;
@@ -17,6 +20,7 @@ import com.sky.service.ShoppingCartService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.vo.OrderVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -106,13 +110,13 @@ class OrderServiceImpl implements OrderService {
         User user = userMapper.getById(userId);
 
         //调用微信支付接口，生成预支付交易单
-        JSONObject jsonObject = weChatPayUtil.pay(
-                ordersPaymentDTO.getOrderNumber(), //商户订单号
-                new BigDecimal(0.01), //支付金额，单位 元
-                "苍穹外卖订单", //商品描述
-                user.getOpenid() //微信用户的openid
-        );
-
+//        JSONObject jsonObject = weChatPayUtil.pay(
+//                ordersPaymentDTO.getOrderNumber(), //商户订单号
+//                new BigDecimal(0.01), //支付金额，单位 元
+//                "苍穹外卖订单", //商品描述
+//                user.getOpenid() //微信用户的openid
+//        );
+        JSONObject jsonObject = new JSONObject();
         if (jsonObject.getString("code") != null && jsonObject.getString("code").equals("ORDERPAID")) {
             throw new OrderBusinessException("该订单已支付");
         }
@@ -142,5 +146,32 @@ class OrderServiceImpl implements OrderService {
                 .build();
 
         orderMapper.update(orders);
+    }
+
+    @Override
+    public PageResult PageQuery(OrdersPageQueryDTO ordersPageQueryDTO) {
+        //开启分页查询
+        PageHelper.startPage(ordersPageQueryDTO.getPage(), ordersPageQueryDTO.getPageSize());
+        //先查询所有符合条件的订单(pay_status)
+        Page<Orders> orderDetails = orderMapper.pageQuery(ordersPageQueryDTO);
+        List<OrderVO> list = new ArrayList();
+        //查询出订单明细，并封装入OrderVO进行响应
+        if(orderDetails != null && orderDetails.getTotal() > 0)
+        {
+            for(Orders orders : orderDetails)
+            {
+                OrderVO ordervo = new OrderVO();
+                Long id = orders.getId();
+                //根据id查询订单明细
+                List<OrderDetail> l = orderDetailMapper.getById(id);
+                ordervo.setOrderDetailList(l);
+                BeanUtils.copyProperties(orders,ordervo);
+                list.add(ordervo);
+            }
+        }
+        PageResult pageResult = new PageResult();
+        pageResult.setRecords(list);
+        pageResult.setTotal(orderDetails.getTotal());
+        return pageResult;
     }
 }
