@@ -7,6 +7,7 @@ import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
+import com.sky.dto.OrdersRejectionDTO;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.entity.*;
 import com.sky.exception.AddressBookBusinessException;
@@ -278,9 +279,9 @@ class OrderServiceImpl implements OrderService {
         OrderStatisticsVO orderStatisticsVO = new OrderStatisticsVO();
         OrdersPageQueryDTO ordersPageQueryDTO = new OrdersPageQueryDTO();
 
-        //3 待接单 2 待派送 4派送中
-        orderStatisticsVO.setToBeConfirmed(getStatusNum(3));
-        orderStatisticsVO.setConfirmed(getStatusNum(2));
+        // 待接单 2 待派送 3 派送中 4
+        orderStatisticsVO.setToBeConfirmed(getStatusNum(2));
+        orderStatisticsVO.setConfirmed(getStatusNum(3));
         orderStatisticsVO.setDeliveryInProgress(getStatusNum(4));
         return orderStatisticsVO;
     }
@@ -290,5 +291,53 @@ class OrderServiceImpl implements OrderService {
         ordersPageQueryDTO.setStatus(status);
         Page<Orders> orders = orderMapper.pageQuery(ordersPageQueryDTO);
         return orders.size();
+    }
+
+    @Override
+    public OrderVO GetOrderDetail(Long id) {
+        OrderVO orderVO = new OrderVO();
+        //根据id查询order
+        Orders order = orderMapper.getByid(id);
+        BeanUtils.copyProperties(order,orderVO);
+        //根据id查询order_detail
+        List<OrderDetail> orderDetails = orderDetailMapper.getById(id);
+        orderVO.setOrderDetailList(orderDetails);
+        return orderVO;
+    }
+
+    @Override
+    public void confirm(Long id) {
+        Orders orders = new Orders();
+        orders.setId(id);
+        orders.setStatus(3);
+        orderMapper.update(orders);
+    }
+
+    @Override
+    public void delivery(Long id) {
+        Orders orders = new Orders();
+        orders.setId(id);
+        orders.setStatus(4);
+        orderMapper.update(orders);
+    }
+
+    @Override
+    public void rejection(OrdersRejectionDTO ordersRejectionDTO) {
+        //查询出订单,如果不是待接单则不可以拒单
+        Orders order = orderMapper.getByid(ordersRejectionDTO.getId());
+        //不可以拒单
+        if(order.getStatus() > 2)
+        {
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+        else
+        {
+            //更新订单
+            Orders orders = new Orders();
+            orders.setId(ordersRejectionDTO.getId());
+            orders.setCancelReason(ordersRejectionDTO.getRejectionReason());
+            orders.setStatus(6);
+            orderMapper.update(orders);
+        }
     }
 }
