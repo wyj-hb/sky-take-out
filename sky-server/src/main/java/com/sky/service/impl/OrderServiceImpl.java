@@ -196,4 +196,17 @@ class OrderServiceImpl implements OrderService {
         ).collect(Collectors.toList());
         shoppingCartMapper.insertBatch(shoppingCarts);
     }
+
+    //获取订单详情
+    @Override
+    public OrderVO getOrderDetail(Long id) {
+        OrderVO orderVO = new OrderVO();
+        //根据订单id查询订单信息
+        Orders order = orderMapper.getByid(id);
+        BeanUtils.copyProperties(order,orderVO);
+        //查询订单详情
+        List<OrderDetail> orderDetails = orderDetailMapper.getById(id);
+        orderVO.setOrderDetailList(orderDetails);
+        return orderVO;
+    }
 }
