@@ -10,6 +10,7 @@ import org.apache.tomcat.jni.Local;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface OrderMapper {
@@ -38,4 +39,16 @@ public interface OrderMapper {
     Orders getByid(Long id);
     @Select("select * from orders where status = #{status} and order_time < #{orderTime}")
     List<Orders> getByStatusAndOrderTime(Integer status, LocalDateTime orderTime);
+    /*
+    * @Description 查询每天的营业额
+    * @Param
+    * @return
+    **/
+    /*
+    * @Description 根据动态条件统计营业额数据
+    * @Param
+    * @return
+    **/
+
+    Double sumByMap(Map map);
 }
