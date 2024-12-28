@@ -62,7 +62,6 @@ public class ReportServiceImpI implements ReportService
         String turnOverList = StringUtils.join(turnoverList, ",");
         return TurnoverReportVO.builder().dateList(datalist).turnoverList(turnOverList).build();
     }
-
     @Override
     public UserReportVO getUserStatistics(LocalDate begin, LocalDate end) {
         //查询起始终止日期
