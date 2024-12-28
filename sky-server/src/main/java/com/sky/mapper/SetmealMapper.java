@@ -13,6 +13,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Mapper
@@ -39,4 +40,6 @@ public interface SetmealMapper {
     void delete(List<Long> ids);
     @Select("select * from setmeal where id = #{id}")
     Setmeal getSetmealByid(Long id);
+
+    Integer countByMap(Map map);
 }
