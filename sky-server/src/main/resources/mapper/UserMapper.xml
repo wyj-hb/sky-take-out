@@ -8,4 +8,12 @@
         values
            (#{openid},#{name},#{phone},#{sex},#{idNumber},#{avatar},#{createTime})
     </insert>
+    <select id="countBymap" resultType="java.lang.Integer">
+        select count(1) from user
+        <where>
+            <if test="begin != null and end != null">
+                and create_time BETWEEN #{begin} AND #{end}
+            </if>
+        </where>
+    </select>
 </mapper>
