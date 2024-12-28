@@ -28,7 +28,6 @@ public interface CategoryMapper {
             " VALUES" +
             " (#{type}, #{name}, #{sort}, #{status}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser})")
     void insert(Category category);
-    @AutoFill(value = OperationType.INSERT)
     /**
      * 分页查询
      * @param categoryPageQueryDTO
