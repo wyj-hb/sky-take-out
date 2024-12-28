@@ -13,6 +13,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 @RestController
 @Slf4j
@@ -53,5 +57,19 @@ public class ReportController
         log.info("销量排名前10");
         SalesTop10ReportVO salesTop10ReportVO = reportService.getDishTop10(begin, end);
         return Result.success(salesTop10ReportVO);
+    }
+    /*
+    * @Description 导出运营数据报表
+    * @Param
+    * @return
+    **/
+
+    @GetMapping("/export")
+    @ApiOperation("导出报表")
+    public Result export(HttpServletResponse response)
+    {
+        log.info("导出报表");
+        reportService.exportBusinessData(response);
+        return Result.success();
     }
 }
